@@ -1,0 +1,98 @@
+/*this program is aimed at making the robrot follow a black line and turing around at the end of the black line
+and continue to follow the line*/
+
+//define motor pins
+#define motor1 8
+#define motor2 7
+#define speed1 5
+#define speed2 6
+//define sensor pins
+#define PIN_R A0
+#define PIN_M A1 
+#define PIN_L A2
+
+int RValue;
+int LValue;
+int MValue;
+
+void setup() {
+ 
+Serial.begin(9600);
+//set pins as output:
+ for (int i=3; i<9; i++){
+pinMode (i, OUTPUT);}
+//initialize standby pin:
+digitalWrite(3, HIGH);
+//set pins as input:
+pinMode(PIN_R, INPUT);
+pinMode(PIN_M, INPUT);
+pinMode(PIN_L, INPUT);
+
+}
+
+//makes the car stop when the function is called:
+void stop(){
+ digitalWrite(8, 1);
+ digitalWrite(7, 1);
+ analogWrite(5, 0);
+ analogWrite(6, 0);
+}
+//makes the car move left when the function is called:
+void Left(){
+ digitalWrite(8, 0);
+ digitalWrite(7, 1);
+ analogWrite(5, 70);
+ analogWrite(6, 70);
+}
+//makes the car move right when the function is called:
+ void Right(){
+ digitalWrite(8, 1);
+ digitalWrite(7, 0);
+ analogWrite(5, 70);
+ analogWrite(6, 70);
+}
+//makes the car move forward when the function is called:
+void forward(){
+ digitalWrite(8, 1);
+ digitalWrite(7, 1);
+ analogWrite(5, 70);
+ analogWrite(6, 70);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+ int RValue= analogRead(A0); // put your main code here, to run repeatedly:
+float right = RValue ;
+Serial.print("RValue =");
+Serial.print(right);
+
+ int MValue= analogRead(A1); // put your main code here, to run repeatedly:
+float middle = MValue ;//middle sensor
+Serial.print("   MValue =");
+Serial.print(middle);
+
+int LValue= analogRead(A2); // put your main code here, to run repeatedly:
+float left = LValue ;//left
+Serial.print("  LValue =");
+Serial.println(left);
+
+
+//moves forward if middle sensor is on the line:
+if ( middle >= 70 ){
+forward();
+}
+// moves left if left sensor is on the lien:
+else if (left >= 70){
+ Left();
+}
+//moves right if right sensor is on the line:
+else if (right >= 70){
+ Right();
+}
+//stop when the robot picked up:
+ if(middle >800 && left>800 && right>800){
+  stop();
+}
+
+}
