@@ -1,0 +1,146 @@
+/*
+the goal of this program is to move the robot car by using the IR remote.
+*/
+
+// Include IR Remote Library by Ken Shirriff
+#include <IRremote.h>
+#define F 16736925 // FORWARD
+#define B 16754775 // BACKWARD
+#define L 16720605 // LEFT
+#define R 16761405 // RIGHT
+#define S 16712445 // STOP
+// Define sensor pin
+const int RECV_PIN = 9;
+
+//[movement]define motor pins
+#define motor1 8
+#define motor2 7
+#define speed1 5
+#define speed2 6
+
+
+// Define integer to remember toggle state
+int togglestate = 0;
+
+// Define IR Receiver and Results Objects
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+ 
+
+void setup(){
+  Serial.begin(9600);//initialize serial comunication at 9600 bits per second:
+  // Enable the IR Receiver
+  irrecv.enableIRIn();
+  // set pins as outputs
+    for (int i=5 ;i<9 ;i++){
+pinMode(i, OUTPUT);}
+ digitalWrite(3, HIGH);//initialize standby pin:
+
+}
+
+
+void loop(){
+  //if buttons on the IR remote are pressed ,the robot will perform a certain function: 
+    if (irrecv.decode(&results)){
+ Serial.println(results.value, HEX);
+        irrecv.resume(); 
+ 
+        switch(results.value){
+         
+          case 0xFF629D: 
+         forward();
+          
+        break;
+   
+          case 0xFFA857: 
+       backward();
+         break;
+        
+        case 0xFF02FD:
+        stop();
+         break;
+
+        case 0xFF22DD:
+        left();
+        break;
+          
+        case 0xFFC23D:
+        right();
+        break;        
+        
+       case 0xFF6897:
+      
+       stop();
+       
+       break;
+      
+      case 0xFF9867:
+    
+       stop();
+       break;
+      
+      case 0xFFB04F:
+  
+       stop();
+       break;      
+        }
+    }
+        
+    }
+   
+/* funtions that make the robot move forward,backward,left,right,
+forward left,forward right,backward left,backward right,  and stop respectively.*/
+void forward(){
+ digitalWrite(8, 1);
+ digitalWrite(7, 1);
+ analogWrite(5, 126);
+ analogWrite(6, 126);
+}
+void backward(){
+ digitalWrite(8, 0);
+ digitalWrite(7, 0);
+ analogWrite(5, 126);
+ analogWrite(6, 126);
+}
+void left(){
+ digitalWrite(8, 0);
+ digitalWrite(7, 1);
+ analogWrite(5, 126);
+ analogWrite(6, 126);
+}
+ void right(){
+ digitalWrite(8, 1);
+ digitalWrite(7, 0);
+ analogWrite(5, 126);
+ analogWrite(6, 126);
+}
+ void forwardleft(){
+ digitalWrite(8, 1);
+ digitalWrite(7, 1);
+ analogWrite(5, 126);
+ analogWrite(6, 63);
+}
+ void forwardright(){
+ digitalWrite(8, 1);
+ digitalWrite(7, 1);
+ analogWrite(5, 63);
+ analogWrite(6, 126);
+}
+ void backwardleft(){
+ digitalWrite(8, 0);
+ digitalWrite(7, 0);
+ analogWrite(5, 126);
+ analogWrite(6, 63);
+}
+void backwardright(){
+ digitalWrite(8, 0);
+ digitalWrite(7, 0);
+ analogWrite(5, 63);
+ analogWrite(6, 126);
+}
+void stop(){
+ digitalWrite(8, 1);
+ digitalWrite(7, 1);
+ analogWrite(5, 0);
+ analogWrite(6, 0);
+}
